@@ -6,7 +6,10 @@ from abc import ABC, abstractmethod
 class APIKey(ABC):
     @abstractmethod
     def api(self):
+        # response = requests.get(url)
+        # data = response.json()
         pass
+
 #     api_key: str = os.getenv('API_KEY_YT')
 #     youtube = build('youtube', 'v3', developerKey=api_key)
 class HeadHunterAPI(APIKey):
