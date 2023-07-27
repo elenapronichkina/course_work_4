@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import requests
 import json
 import os
@@ -6,25 +8,39 @@ from abc import ABC, abstractmethod
 # Реализовать классы, наследующиеся от абстрактного класса, для работы с конкретными платформами.
 # Классы должны уметь подключаться к API и получать вакансии.
 class APIKEY(ABC):
-    def __init__(self, url, params):
-        self.url = url
-        self.params = params
        #api_key: str = os.getenv('API_KEY_YT')
     @abstractmethod
     def get_vacancies(self):
-        response = requests.get(url, params=params)
+        pass
+        # response = requests.get(url, params=params)
+        # data = response.json()
+        # return data
+class HeadHunterAPI(APIKEY):
+    def __init__ (self, word_vacancy):
+        self.__word_vacancy = word_vacancy
+
+    url = "https://api.hh.ru/vacancies/"
+    # params = {
+    #         'text': 'NAME:word_vacancy', # Текст фильтра. В имени должно быть наименование вакансии
+    #         'area': 113, # Поиск ощуществляется по вакансиям города Москва #113 - по России
+    #         'page': page, # Индекс страницы поиска на HH начинается с 0. Значение по умолчанию 0, т.е. первая страница
+    #         'per_page': 100 # Кол-во вакансий на 1 странице
+    #    }
+# headhunter_api = HeadHunterAPI()
+    def get_vacancies(self):
+        params = {
+            'text': self.__word_vacancy,  # Текст фильтра. В имени должно быть наименование вакансии
+            'area': 113,  # Поиск ощуществляется по вакансиям города Москва #113 - по России
+            'page': 0,  # Индекс страницы поиска на HH начинается с 0. Значение по умолчанию 0, т.е. первая страница
+            'per_page': 100  # Кол-во вакансий на 1 странице
+        }
+
+        response = requests.get(self.url, params=params)
         data = response.json()
         return data
-class HeadHunterAPI(APIKEY):
-    url = https://api.hh.ru/vacancies/
-    params = {
-            'text': 'NAME:word_vacancy', # Текст фильтра. В имени должно быть наименование вакансии
-            'area': 1, # Поиск ощуществляется по вакансиям города Москва #113 - по России
-            'page': page, # Индекс страницы поиска на HH начинается с 0. Значение по умолчанию 0, т.е. первая страница
-            'per_page': 100 # Кол-во вакансий на 1 странице
-        }
-# headhunter_api = HeadHunterAPI()
-# headhunter_api.get_vacancies()
+
+hh_1 = HeadHunterAPI("Python")
+pprint(hh_1.get_vacancies())
 
 #   def get_page(page = 0):
     #     """
@@ -50,14 +66,25 @@ class HeadHunterAPI(APIKEY):
   #  f.write(json.dumps(jsObj, ensure_ascii=False))
   #  f.close()
 class SuperjobAPI(APIKEY):
-    #access_token = v3.r.137702272.d9fb18907e74e64bafbab0b5f26a5ba34e121367.2e76017ab5def4f4b11596df0f549e0b1cc7a16e
+    access_token = "v3.r.137702272.d9fb18907e74e64bafbab0b5f26a5ba34e121367.2e76017ab5def4f4b11596df0f549e0b1cc7a16e"
     # https://api.superjob.ru/2.0/vacancies/?access_token
     # https://api.superjob.ru/:version/method_name/:params
 
-    url = https://api.superjob.ru/2.0/vacancies/:params
-    params = {
-        'keyword': 'NAME:word_vacancy',  # Текст фильтра. В имени должно быть наименование вакансии
-        'town': 1,  # Поиск ощуществляется по вакансиям города Москва #113 - по России
-        'page': page,  # номер страницы поиска, начинается с 0. Значение по умолчанию 0, т.е. первая страница
-        'count': 100  # Кол-во результатов на страницу поиска. Максимальное число результатов - 100
-    }
+    url = "https://api.superjob.ru/2.0/vacancies/:params"
+
+    def __init__(self, word_vacancy):
+        self.__word_vacancy = word_vacancy
+    def get_vacancies(self):
+        params = {
+        'keyword': self.__word_vacancy,  # Текст фильтра. В имени должно быть наименование вакансии
+        'town': 1,  # Поиск ощуществляется по вакансиям города Москва #1 - по России
+        # 'page': page,  # номер страницы поиска, начинается с 0. Значение по умолчанию 0, т.е. первая страница
+        # 'count': 100  # Кол-во результатов на страницу поиска. Максимальное число результатов - 100
+        }
+
+        headers = {
+            "X-Api-App-Id": access_token
+        }
+        response = requests.get(self.url, headers = headers, params=params)
+        data = response.json()
+        return data
