@@ -1,11 +1,22 @@
-
+import json
+from src.api import HeadHunterAPI
 class Vacancy:
-    def __init__(self, vacancy_id):
-        self._vacancy_id = vacancy_id
-        self.vacancy_url = f'https://hh.ru/vacancy/{self._vacancy_id}'  # ссылка на вакансию
-        self.title = self.vacancy["items"]["name"]  # название вакансии
-        self.salary = self.vacancy["items"]["salary"] #зарплата
-        self.requirement = self.vacancy["items"]['snippet']['requirement'] #требования
+    def __init__(self, vacancy_url, title, salary, requirement):
+        self.vacancy_url = self.data["items"]['alternate_url']  # ссылка на вакансию
+        self.title = self.data["items"]["name"]  # название вакансии
+        self.salary = self.data["items"]["salary"] #зарплата
+        self.requirement = self.data["items"]['snippet']['requirement'] #требования
+
+    def to_json(self, filename):
+        """сохраняет в файл значения атрибутов экземпляра Vacancy"""
+        data = {
+            "title": self.title,
+            "url": self.vacancy_url,
+            "salary": self.salary,
+            "requirement": self.requirement,
+             }
+        with open(filename, "w", encoding="UTF-8") as file:
+            json.dump(data, file, indent=2, ensure_ascii=False)
 
     def list_vacancies(self):
         """получение списка вакансий"""
@@ -18,10 +29,10 @@ class Vacancy:
         """возвращает название и ссылку на вакансию"""
         return f"{self.title} ({self.vacancy_url})"
 
-
     def __lt__(self, other):
         """сравнение по зарплате"""
-         return self.salary < other.salary
+        return self.salary < other.salary
+
 
 #Создать класс для работы с вакансиями.
 # В этом классе самостоятельно определить атрибуты, такие как
