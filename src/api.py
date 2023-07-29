@@ -39,8 +39,8 @@ class HeadHunterAPI(APIKEY):
         data = response.json()
         return data
 
-hh_1 = HeadHunterAPI("Python")
-pprint(hh_1.get_vacancies())
+# hh_1 = HeadHunterAPI("Python")
+# pprint(hh_1.get_vacancies())
 
 #   def get_page(page = 0):
     #     """
@@ -78,8 +78,8 @@ class SuperjobAPI(APIKEY):
         params = {
         'keyword': self.__word_vacancy,  # Текст фильтра. В имени должно быть наименование вакансии
         'town': 1,  # Поиск ощуществляется по вакансиям города Москва #1 - по России
-        # 'page': page,  # номер страницы поиска, начинается с 0. Значение по умолчанию 0, т.е. первая страница
-        # 'count': 100  # Кол-во результатов на страницу поиска. Максимальное число результатов - 100
+        'page': 0,  # номер страницы поиска, начинается с 0. Значение по умолчанию 0, т.е. первая страница
+        'count': 100  # Кол-во результатов на страницу поиска. Максимальное число результатов - 100
         }
 
         headers = {
@@ -88,3 +88,6 @@ class SuperjobAPI(APIKEY):
         response = requests.get(self.url, headers = headers, params=params)
         data = response.json()
         return data
+
+    # sj_1 = SuperjobAPI("Python")
+    # pprint(sj_1.get_vacancies())
