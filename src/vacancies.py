@@ -7,6 +7,12 @@ class Vacancy:
         self.salary = self.vacancy["items"]["salary"] #зарплата
         self.requirement = self.vacancy["items"]['snippet']['requirement'] #требования
 
+    def list_vacancies(self):
+        """получение списка вакансий"""
+        vacancies = []
+        vacancy = Vacancy()
+        vacancies.append(vacancy)
+        return vacancies
 
     def __str__(self):
         """возвращает название и ссылку на вакансию"""
