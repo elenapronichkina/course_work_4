@@ -1,5 +1,4 @@
 from pprint import pprint
-
 import requests
 import json
 import os
@@ -8,19 +7,14 @@ from abc import ABC, abstractmethod
 # Реализовать классы, наследующиеся от абстрактного класса, для работы с конкретными платформами.
 # Классы должны уметь подключаться к API и получать вакансии.
 class APIKEY(ABC):
-       #api_key: str = os.getenv('API_KEY_YT')
     @abstractmethod
     def get_vacancies(self):
         pass
-        # response = requests.get(url, params=params)
-        # data = response.json()
-        # return data
+
 class HeadHunterAPI(APIKEY):
     def __init__ (self, word_vacancy):
         self.__word_vacancy = word_vacancy
-
     url = "https://api.hh.ru/vacancies/"
-# headhunter_api = HeadHunterAPI()
     def get_vacancies(self):
         """
            метод для получения страницы со списком вакансий.
@@ -41,9 +35,7 @@ class HeadHunterAPI(APIKEY):
 
 class SuperjobAPI(APIKEY):
     access_token = "v3.r.137702272.d9fb18907e74e64bafbab0b5f26a5ba34e121367.2e76017ab5def4f4b11596df0f549e0b1cc7a16e"
-    # https://api.superjob.ru/2.0/vacancies/?access_token
-    # https://api.superjob.ru/:version/method_name/:params
-
+    # api_key: str = os.getenv('API_KEY_YT')
     url = "https://api.superjob.ru/2.0/vacancies/:params"
 
     def __init__(self, word_vacancy):
@@ -62,7 +54,7 @@ class SuperjobAPI(APIKEY):
         headers = {
             "X-Api-App-Id": access_token
         }
-        response = requests.get(self.url, headers = headers, params=params)
+        response = requests.get(self.url, headers=headers, params=params)
         data = response.json()
         return data
 
