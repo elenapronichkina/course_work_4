@@ -8,8 +8,10 @@ def read_json(file_path):
         data = json.load(f)
     return data
 
-
-
+def write_json(file_path):
+    """Запись данных в файл в формате JSON"""
+    with open(file_path, 'w') as f:
+        json.dump(data, f)
 
 #Считываем первые 2000 вакансий
 #for page in range(0, 20):
