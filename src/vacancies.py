@@ -2,13 +2,20 @@
 class Vacancy:
     def __init__(self, vacancy_id):
         self._vacancy_id = vacancy_id
-        self.vacancy_url = "https://hh.ru/vacancy/{vacancy_id}"  # ссылка на вакансию
-        self.title = self.vacancy["items"][0]["name"]  # название вакансии
-        self.salary = self.vacancy["items"][0]["salary"] #зарплата
-        self.salary = self.area["items"][0]["area"]["name"] #локация (город)
-        #краткое описание или требования
+        self.vacancy_url = f'https://hh.ru/vacancy/{self._vacancy_id}'  # ссылка на вакансию
+        self.title = self.vacancy["items"]["name"]  # название вакансии
+        self.salary = self.vacancy["items"]["salary"] #зарплата
+        self.requirement = self.vacancy["items"]['snippet']['requirement'] #требования
 
 
+    def __str__(self):
+        """возвращает название и ссылку на вакансию"""
+        return f"{self.title} ({self.vacancy_url})"
+
+
+    def __lt__(self, other):
+        """сравнение по зарплате"""
+         return self.salary < other.salary
 
 #Создать класс для работы с вакансиями.
 # В этом классе самостоятельно определить атрибуты, такие как
