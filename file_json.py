@@ -8,6 +8,9 @@ def read_json(file_path):
         data = json.load(f)
     return data
 
+
+
+
 #Считываем первые 2000 вакансий
 #for page in range(0, 20):
 
