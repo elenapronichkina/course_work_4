@@ -1,10 +1,17 @@
-
+from src.api import HeadHunterAPI, SuperJobAPI
 def user_interaction():
+    hh_api = HeadHunterAPI()
+    superjob_api = SuperJobAPI()
+    hh_vacancies = hh_api.get_vacancies()
+    sj_vacancies = superjob_api.get_vacancies()
     user_platform = input("Введите название сайта:")
         if user_platform not in ["HeadHunter", "SuperJob"]:
             print("Сайт недоступен")
         else:
             word_vacancy = input("Введите наименование вакансии:")
+
+
+
 
 
 
