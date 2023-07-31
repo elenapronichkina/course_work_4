@@ -1,54 +1,55 @@
-import json
-from src.api import HeadHunterAPI
 class Vacancy:
-    def __init__(self, vacancy_url, title, salary, requirement):
-        self.vacancy_url = self.data["items"]['alternate_url']  # ссылка на вакансию
-        self.title = self.data["items"]["name"]  # название вакансии
-        self.salary = self.data["items"]["salary"] #зарплата
-        self.requirement = self.data["items"]['snippet']['requirement'] #требования
+    """класс для работы с вакансиями"""
 
-    def to_json(self, filename):
+    def __init__(self, vacancy_url, title, salary, requirement):
+        self.vacancy_url = vacancy_url  # ссылка на вакансию
+        self.title = title  # название вакансии
+        self.salary = salary  # зарплата
+        self.requirement = requirement  # требования
+
+    def to_json(self):
         """сохраняет в файл значения атрибутов экземпляра Vacancy"""
         data = {
             "title": self.title,
             "url": self.vacancy_url,
             "salary": self.salary,
             "requirement": self.requirement,
-             }
-        with open(filename, "w", encoding="UTF-8") as file:
-            json.dump(data, file, indent=2, ensure_ascii=False)
+        }
+        return data
 
-    def list_vacancies(self):
-        """получение списка вакансий"""
-        vacancies = []
-        vacancy = Vacancy()
-        vacancies.append(vacancy)
-        return vacancies
+    @classmethod
+    def vacancy_from_hh(cls, data):
+        """получение списка вакансий HH.ru"""
+        vacancy_url = data['alternate_url']
+        title = data["name"]  # название вакансии
+        salary = data["salary"]  # зарплата
+        if salary:
+            salary = data["salary"]["from"]
+            if not salary:
+                salary = 0
+        else:
+            salary = 0
+
+        requirement = data['snippet']['requirement']  # требования
+        vacancy = cls(vacancy_url, title, salary, requirement)
+        return vacancy
+
+    @classmethod
+    def vacancy_from_sj(cls, data):
+        """получение списка вакансий SJ.ru"""
+        vacancy_url = data['link']
+        title = data["profession"]  # название вакансии
+        salary = data["payment_from"]  # зарплата
+        if not salary:
+            salary = 0
+        requirement = data['candidat']  # требования
+        vacancy = cls(vacancy_url, title, salary, requirement)
+        return vacancy
 
     def __str__(self):
         """возвращает название и ссылку на вакансию"""
         return f"{self.title} ({self.vacancy_url})"
 
     def __lt__(self, other):
-        """сравнение по зарплате"""
+        """сравнение по зарплате: от меньшего к большему"""
         return self.salary < other.salary
-
-
-#Создать класс для работы с вакансиями.
-# В этом классе самостоятельно определить атрибуты, такие как
-# название вакансии, ссылка на вакансию, зарплата, краткое описание или требования и т.п.
-# (не менее четырех)
-# Класс должен поддерживать методы сравнения вакансий между собой по зарплате и
-# валидировать данные, которыми инициализируются его атрибуты.
-#должен быть реализован в соответствии с принципом инкапсуляции и п
-# оддерживать методы сравнения вакансий между собой по зарплате
-
-# Создание экземпляра класса для работы с вакансиями
-# vacancy = Vacancy("Python Developer", "<https://hh.ru/vacancy/123456>",
-# "100 000-150 000 руб.", "Требования: опыт работы от 3 лет...")
-#
-# # Сохранение информации о вакансиях в файл
-# json_saver = JSONSaver()
-# json_saver.add_vacancy(vacancy)
-# json_saver.get_vacancies_by_salary("100 000-150 000 руб.")
-# json_saver.delete_vacancy(vacancy)

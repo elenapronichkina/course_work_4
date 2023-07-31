@@ -1,43 +1,43 @@
-from src.api import HeadHunterAPI, SuperJobAPI
+from file_json import write_json
+from src.api import HeadHunterAPI, SuperjobAPI
+from src.vacancies import Vacancy
+
+
 def user_interaction():
-    hh_api = HeadHunterAPI()
-    superjob_api = SuperJobAPI()
+    """функция для взаимодействия с пользователем"""
+    word_vacancy = input("Введите наименование вакансии:")
+    hh_api = HeadHunterAPI(word_vacancy)
+    superjob_api = SuperjobAPI(word_vacancy)
+
     hh_vacancies = hh_api.get_vacancies()
     sj_vacancies = superjob_api.get_vacancies()
-    user_platform = input("Введите название сайта:")
-        if user_platform not in ["HeadHunter", "SuperJob"]:
-            print("Сайт недоступен")
-        else:
-            word_vacancy = input("Введите наименование вакансии:")
+    vacancies = []
+    for vacancy in hh_vacancies["items"]:
+        item = Vacancy.vacancy_from_hh(vacancy)
+        vacancies.append(item)
 
+    for vacancy in sj_vacancies["objects"]:
+        item = Vacancy.vacancy_from_sj(vacancy)
+        vacancies.append(item)
 
+    vacancies_to_json = []
+    for vacancy in vacancies:
+        vacancy_in_json = vacancy.to_json()
+        vacancies_to_json.append(vacancy_in_json)
 
+    write_json("vacancies.json", vacancies_to_json)
 
+    print("Введите 1, чтобы отсортировать вакансии по зарплате\n"
+          "Введите 2, чтобы вывести топ вакансий")
+    user_input = input()
+    if user_input == "1":
+        sorted_vacancies = sorted(vacancies)
+        for vacancy in sorted_vacancies:
+            print(vacancy)
 
-
-
-
-
-
-#Создать функцию для взаимодействия с пользователем.
-# Функция должна взаимодействовать с пользователем через консоль.
-# Самостоятельно придумать сценарии и возможности взаимодействия с пользователем.
-# Например, позволять пользователю указать, с каких платформ он хочет получить вакансии,
-# ввести поисковый запрос, получить топ N вакансий по зарплате, получить вакансии в отсортированном виде,
-# получить вакансии, в описании которых есть определенные ключевые слова, например "postgres" и т. п
-
-## Функция для взаимодействия с пользователем
-# def user_interaction():
-#     platforms = ["HeadHunter", "SuperJob"]
-#     search_query = input("Введите поисковый запрос: ")
-#     top_n = int(input("Введите количество вакансий для вывода в топ N: "))
-#     filter_words = input("Введите ключевые слова для фильтрации вакансий: ").split()
-#     filtered_vacancies = filter_vacancies(hh_vacancies, superjob_vacancies, filter_words)
-#
-#     if not filtered_vacancies:
-#         print("Нет вакансий, соответствующих заданным критериям.")
-#         return
-#
-#     sorted_vacancies = sort_vacancies(filtered_vacancies)
-#     top_vacancies = get_top_vacancies(sorted_vacancies, top_n)
-#     print_vacancies(top_vacancies)
+    if user_input == "2":
+        print("Введите количество вакансий для списка топ")
+        user_input_top = input()
+        sorted_vacancies = sorted(vacancies, reverse=True)
+        for vacancy in sorted_vacancies[0:int(user_input_top)]:
+            print(vacancy)

@@ -8,24 +8,7 @@ def read_json(file_path):
         data = json.load(f)
     return data
 
-def write_json(file_path):
+def write_json(file_path, data):
     """Запись данных в файл в формате JSON"""
     with open(file_path, 'w') as f:
-        json.dump(data, f)
-
-#Считываем первые 2000 вакансий
-#for page in range(0, 20):
-
-    # Преобразуем текст ответа запроса в справочник Python
-#    jsObj = json.loads(get_page(page))
-## Сохраняем файлы в папку {путь до текущего документа со скриптом}\docs\pagination
-    # Определяем количество файлов в папке для сохранения документа с ответом запроса
-    # Полученное значение используем для формирования имени документа
-    #nextFileName = './docs/pagination/{}.json'.format(len(os.listdir('./docs/pagination')))
-
-    # Создаем новый документ, записываем в него ответ запроса, после закрываем
-  #  f = open(nextFileName, mode='w', encoding='utf8')
-  #  f.write(json.dumps(jsObj, ensure_ascii=False))
-  #  f.close()
-
-
+        json.dump(data, f, ensure_ascii=True, indent=2)
